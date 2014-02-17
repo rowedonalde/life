@@ -16,3 +16,7 @@
 *.exe
 *.out
 *.app
+
+# Actual executable names:
+life
+glife
