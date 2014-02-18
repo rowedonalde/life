@@ -7,6 +7,8 @@
 
 #include "lifelib.h"
 
+#define MICRO_PER_MILLI 1000
+#define WAIT_TIME_MS 1000
 #define WINDOW_W 500
 #define WINDOW_H 500
 
@@ -51,7 +53,7 @@ void gdisplay(int* board, int board_w, int board_h, SDL_Renderer* ren,
 
 int main(int argc, char** argv) {
     // Process args:
-    int wait_ms = 1000;
+    int wait_ms = WAIT_TIME_MS;
     int win_width = WINDOW_W;
     int win_height = WINDOW_H;
     if (argc == 2) {
@@ -101,7 +103,7 @@ int main(int argc, char** argv) {
     int gamerun = 1;
     int tick = 0;
     while (gamerun) {
-        if (clock() - last_frame_time >= 1000 * wait_ms) {
+        if (clock() - last_frame_time >= MICRO_PER_MILLI * wait_ms) {
             // The order here is flipped around compared to the
             // ascii version. Here, tick represents which tick
             // we're on, not how many we've finished.
