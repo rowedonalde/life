@@ -17,11 +17,12 @@ Actually, it's probably easier and cleaner to say something like:
 
 See the examples folder for examples.
 
-glife
-=====
+##glife
+
 
 glife is a version of life that takes the same input but instead
 features windowed graphic output. It requires OpenGL and SDL2. If
 you're using OSX, compile it with
+
     gcc glife.c lifelib.c -framework OpenGL -framework SDL2 -o glife
 
