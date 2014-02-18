@@ -19,7 +19,7 @@ See the examples folder for examples.
 
 glife
 =====
-=====
+
 glife is a version of life that takes the same input but instead
 features windowed graphic output. It requires OpenGL and SDL2. If
 you're using OSX, compile it with
