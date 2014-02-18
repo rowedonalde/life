@@ -5,8 +5,6 @@
 
 #include "lifelib.h"
 
-#define SLEEPTIME 1
-
 int main(int argc, char** argv) {
     int width;
     int height;
