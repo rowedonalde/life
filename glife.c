@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <time.h>
 
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
 #include <unistd.h>
 #include <SDL2/SDL.h>
 
@@ -10,9 +8,6 @@
 
 #define WINDOW_W 500
 #define WINDOW_H 500
-
-int width;
-int height;
 
 /*
  * Displays game graphically rather than with ASCII
@@ -54,6 +49,8 @@ void gdisplay(int* board, int width, int height, SDL_Renderer* ren) {
 
 int main(int argc, char** argv) {
     // Game setup:
+    int width;
+    int height;
     // On my machine, this is in microseconds, but that may
     // differ based on implementation, I think:
     clock_t last_frame_time;
