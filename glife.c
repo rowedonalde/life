@@ -102,9 +102,12 @@ int main(int argc, char** argv) {
     
     // Main Animation Loop:
     int gamerun = 1;
+    int play_simulation = 1;
     int tick = 0;
+    const Uint8 *key_state = NULL;
+
     while (gamerun) {
-        if (clock() - last_frame_time >= MICRO_PER_MILLI * wait_ms) {
+        if (play_simulation && clock() - last_frame_time >= MICRO_PER_MILLI * wait_ms) {
             // The order here is flipped around compared to the
             // ascii version. Here, tick represents which tick
             // we're on, not how many we've finished.
@@ -121,8 +124,22 @@ int main(int argc, char** argv) {
         
         // SDL doesn't automatically poll for events, including quit:
         SDL_Event event;
-        if (SDL_PollEvent(&event) && event.type == SDL_QUIT) {
-            gamerun = 0;
+
+        if (SDL_PollEvent(&event)) {
+            // Quit:
+            if (event.type == SDL_QUIT) {
+                gamerun = 0;
+            }
+
+            // Pause/play:
+            if (event.type == SDL_KEYDOWN) {
+                key_state = SDL_GetKeyboardState(NULL);
+
+                if (key_state[SDL_SCANCODE_SPACE]) {
+                    // Toggle:
+                    play_simulation = (play_simulation - 1) * -1;
+                }
+            }
         }
     }
 
