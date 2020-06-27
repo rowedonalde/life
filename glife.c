@@ -39,13 +39,14 @@ void gdisplay(int* board, int board_w, int board_h, SDL_Renderer* ren,
                 int g = 255;
                 int b = 255;
                 SDL_FillRect(surf, &rect, SDL_MapRGB(surf->format, r, g, b));
-                SDL_Texture* tex = SDL_CreateTextureFromSurface(ren, surf);
-                SDL_RenderCopy(ren, tex, NULL, NULL);
-                SDL_DestroyTexture(tex);
             }
         }
     }
     
+    SDL_Texture* tex = SDL_CreateTextureFromSurface(ren, surf);
+    SDL_RenderCopy(ren, tex, NULL, NULL);
+    SDL_DestroyTexture(tex);
+
     SDL_RenderPresent(ren);
     SDL_FreeSurface(surf);
     SDL_RenderClear(ren);
@@ -124,7 +125,7 @@ int main(int argc, char** argv) {
             gamerun = 0;
         }
     }
-    
+
     SDL_DestroyRenderer(ren);
     SDL_DestroyWindow(main_window);
     SDL_Quit();

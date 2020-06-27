@@ -26,3 +26,9 @@ you're using OSX, compile it with
 
     gcc glife.c lifelib.c -framework OpenGL -framework SDL2 -o glife
 
+XXX As of June 2020, Mac 10.14 cannot find the SDL2 framework where
+the SDL2 readme tells you to install it. I've had success with the
+following:
+
+    gcc glife.c lifelib.c -framework OpenGL -I /Library/Frameworks/SDL2.framework/Headers -F /Library/Frameworks -framework SDL2 -o glife
+
