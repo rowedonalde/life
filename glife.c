@@ -121,7 +121,7 @@ int main(int argc, char** argv) {
             }
             last_frame_time = clock();
         }
-        
+
         // SDL doesn't automatically poll for events, including quit:
         SDL_Event event;
 
@@ -142,19 +142,15 @@ int main(int argc, char** argv) {
             }
 
             if (event.type == SDL_MOUSEBUTTONDOWN) {
-                printf("Click\n");
-
                 // Derive game cell coordinates from click:
                 int window_x = event.button.x;
                 int window_y = event.button.y;
-                printf("Window:\nX: %d\nY: %d\n\n", window_x, window_y);
 
                 int cell_width = win_width / width;
                 int cell_height = win_height / height;
 
                 int cell_x = window_x / cell_width;
                 int cell_y = window_y / cell_height;
-                printf("Cell:\nX: %d\nY: %d\n\n", cell_x, cell_y);
 
                 // Toggle cell value:
                 int* current;
