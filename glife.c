@@ -52,6 +52,23 @@ void gdisplay(int* board, int board_w, int board_h, SDL_Renderer* ren,
     SDL_RenderClear(ren);
 }
 
+static int TimerThread(void *wait_ms_ptr) {
+    Uint32 lifeTickEvent = SDL_RegisterEvents(1);
+    SDL_Event event;
+    SDL_memset(&event, 0, sizeof(event));
+    event.type = lifeTickEvent;
+    event.user.code = 1;
+    event.user.data1 = 0;
+    event.user.data2 = 0;
+
+    while (1) {
+        SDL_Delay(*(int *) wait_ms_ptr);
+        SDL_PushEvent(&event);
+    }
+
+    return 0;
+}
+
 int main(int argc, char** argv) {
     // Process args:
     int wait_ms = WAIT_TIME_MS;
@@ -67,15 +84,18 @@ int main(int argc, char** argv) {
         win_width = atoi(argv[2]);
         win_height = atoi(argv[3]);
     }
+
+    // Put game timer into a thread so we're not constantly spinning
+    // and pegging CPU at 100%:
+    SDL_CreateThread(TimerThread, "TimerThread", &wait_ms);
     
     // Game setup:
     int width;
     int height;
-    // On my machine, this is in microseconds, but that may
-    // differ based on implementation, I think:
-    clock_t last_frame_time;
+
     // The board state on even ticks:
     int* even = input_to_board(&width, &height);
+
     // The board state on odd ticks:
     int* odd = malloc(width * height * sizeof(int));
     blank(odd, width * height);
@@ -98,16 +118,23 @@ int main(int argc, char** argv) {
     
     // Initial frame:
     gdisplay(even, width, height, ren, win_width, win_height);
-    last_frame_time = clock();
     
     // Main Animation Loop:
+
+    // Quit when 0:
     int gamerun = 1;
+
+    // Pause game (but still listen for input) when 0:
     int play_simulation = 1;
+
+    // Play the next generation of life when 1:
+    int do_next_tick = 0;
+
     int tick = 0;
     const Uint8 *key_state = NULL;
 
     while (gamerun) {
-        if (play_simulation && clock() - last_frame_time >= MICRO_PER_MILLI * wait_ms) {
+        if (play_simulation && do_next_tick) {
             // The order here is flipped around compared to the
             // ascii version. Here, tick represents which tick
             // we're on, not how many we've finished.
@@ -119,16 +146,20 @@ int main(int argc, char** argv) {
                 play(odd, even, width, height);
                 gdisplay(even, width, height, ren, win_width, win_height);
             }
-            last_frame_time = clock();
+            do_next_tick = 0;
         }
 
         // SDL doesn't automatically poll for events, including quit:
         SDL_Event event;
 
-        if (SDL_PollEvent(&event)) {
+        if (SDL_WaitEvent(&event)) {
             // Quit:
             if (event.type == SDL_QUIT) {
                 gamerun = 0;
+            }
+
+            if (event.type == SDL_USEREVENT) {
+                do_next_tick = 1;
             }
 
             // Pause/play:
